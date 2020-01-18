@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css?family=Inconsolata:700&display=swap" rel="stylesheet">
+<title>4coder Extension Gallery</title>
+<style>
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inconsolata', monospace;
+    background: #0C0C0C;
+    color: #90B080;
+}
+
+h1 {
+    color: #50FF30;
+    text-align: center;
+}
+
+a {
+    color: #90B080;
+    text-decoration: none;
+}
+
+.content {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.extension_gallery {
+    display: none;
+}
+
+.extension_gallery .tag_list {
+    text-align: center;
+}
+.extension_gallery .tag_list .tag {
+    display: inline-block;
+    margin: 0 5px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #744F14;
+    vertical-align: middle;
+}
+
+.extension_gallery .tag_list .tag .name {
+    vertical-align: middle;
+    text-transform: capitalize;
+}
+
+.extension_gallery .tag_list .tag .num {
+    display: inline-block;
+    background-color: white;
+    border-radius: 100%;
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    text-align: center;
+    margin-left: 5px;
+}
+
+.extension_gallery .tag_list .tag.selected {
+    background-color: #E0AF60;
+    color: #00A000;
+}
+
+.extension_list .extension_list_item {
+    margin: 10px 0;
+    border-radius: 10px;
+    background: #2D2D2D;
+    display: block;
+    overflow: hidden;
+}
+
+.extension_list .extension_list_item .left {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 20px;
+}
+
+.extension_list .extension_list_item .left > * {
+    display: block;
+    width: 200px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.extension_list .extension_list_item .details {
+    vertical-align: top;
+    padding: 10px;
+    display: inline-block;
+}
+
+.extension_list .extension_list_item .details .name {
+    font-size: 32px;
+}
+
+.extension_list .extension_list_item .details .author {
+    color: #00A000;
+}
+
+.extension_list .extension_list_item .details .bottom {
+    margin-top: 10px;
+}
+
+.extension {
+    display: none;
+}
+
+.extension .slideshow {
+    width: 60%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.extension .slideshow .big {
+    height: 600px;
+    overflow: hidden;
+}
+
+.extension .slideshow .big img, .extension .slideshow .big video {
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.extension .slideshow .asset_list {
+    overflow: hidden;
+    white-space: nowrap;
+    overflow-x: scroll;
+}
+
+.extension .slideshow .asset_list .asset {
+    border: 5px solid grey;
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 5px;
+}
+
+.extension .slideshow .asset_list .asset img, .extension .slideshow .asset_list .asset video {
+    display: block;
+    height: 190px;
+    pointer-events: none;
+}
+
+.extension .details {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.extension .details > .name {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.extension .details .tag {
+    display: inline-block;
+    margin: 0 5px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #744F14;
+    vertical-align: middle;
+    text-transform: capitalize;
+}
+
+.extension .author .name {
+    font-size: 24px;
+    display: block;
+}
+
+.extension .author {
+    margin-bottom: 10px;
+}
+
+.extension .author a {
+    color: #D08F20;
+}
+
+.extension .tags {
+    margin-bottom: 10px;
+}
+
+.extension .description {
+    white-space: pre;
+    margin-bottom: 20px;
+}
+
+.extension .get_extension {
+    font-size: 24px;
+    display: block;
+    border-radius: 5px;
+    background-color: #744F14;
+    padding: 10px;
+    text-align: center;
+}
+
+.hide {
+    display: none;
+}
+</style>
+</head>
+<body>
+<template id="extension_list_item">
+<a class="extension_list_item">
+    <div class="left">
+    </div><div class="details">
+        <div class="top">
+            <span class="name"></span> by <span class="author"></span>
+        </div>
+        <div class="bottom">
+            <span class="short_desc"></span>
+        </div>
+    </div>
+</a>
+</template>
+<template id="gallery_tag">
+<a class="tag" href="javascript:;"><span class="name"></span><span class="num"></span></a>
+</template>
+<template id="extension_tag">
+<a class="tag"></a>
+</template>
+<template id="asset">
+<a class="asset" href="javascript:;"></a>
+</template>
+<template id="twitter_review">
+<div class="twitter_review">
+</div>
+</template>
+<template id="text_review">
+<div class="text_review">
+    <div class="left">
+        <img />
+    </div>
+    <div class="right">
+        <span class="author"></span> <span class="date"></span>
+        <div class="text"></div>
+    </div>
+</div>
+</template>
+<div class="content">
+    <h1>4coder Extension Gallery</h1>
+    <div class="loading">
+        Loading...
+    </div>
+    <div class="extension_gallery">
+        <div class="tag_list"></div>
+        <div class="extension_list"></div>
+    </div>
+    <div class="extension">
+        <div class="slideshow">
+            <div class="big"></div><div class="asset_list"></div>
+        </div>
+        <div class="details">
+            <div class="name"></div>
+            <div class="author">
+                <span class="name"></span>
+                <a class="twitter">twitter</a>
+                <a class="github">github</a>
+                <a class="twitch">twitch</a>
+                <a class="website">website</a>
+            </div>
+            <div class="tags"></div>
+            <div class="description"></div>
+            <a class="get_extension">Get extension</a>
+        </div>
+        <div class="reviews"></div>
+    </div>
+</div>
+<script src="data.js"></script>
+<script>
+
+var loadingEl = document.querySelector(".loading");
+var extensionGalleryEl = document.querySelector(".extension_gallery");
+var extensionEl = document.querySelector(".extension");
+
+var data = {
+    tags: [],
+    extensions: []
+};
+
+var filterByTags = {};
+
+function parseDataFile(textData) {
+    data = {
+        tags: [],
+        extensions: []
+    };
+    var reviews = [];
+    var lines = textData.split("\n");
+    for (var lineIdx = 0; lineIdx < lines.length; ++lineIdx) {
+        var line = lines[lineIdx].trim();
+        if (line.startsWith("extension:")) {
+            var extensionStartsAt = lineIdx;
+            var requirements = {
+                id: false,
+                name: false,
+                link: false,
+                author: false,
+                shortDesc: false,
+                assets: false
+            };
+            var extension = {
+                id: "",
+                tags: [],
+                name: "",
+                link: "",
+                author: "",
+                authorLinkTwitter: "",
+                authorLinkTwitch: "",
+                authorLinkWebsite: "",
+                authorLinkGithub: "",
+                shortDesc: "",
+                longDesc: "",
+                assets: [],
+                reviews: []
+            };
+
+            while (!line.startsWith("ENDOFEXTENSION")) {
+                if (line.startsWith("extension:")) {
+                    var id = line.slice(line.indexOf(":")+1).trim();
+                    if (id.length > 0) {
+                        extension.id = id;
+                        requirements.id = true;
+                    }
+                } else if (line.startsWith("extension_name:")) {
+                    var name = line.slice(line.indexOf(":")+1).trim();
+                    if (name.length > 0) {
+                        extension.name = name;
+                        requirements.name = true;
+                    }
+                } else if (line.startsWith("extension_link:")) {
+                    var link = line.slice(line.indexOf(":")+1).trim();
+                    if (link.length > 0) {
+                        extension.link = link;
+                        requirements.link = true;
+                    }
+                } else if (line.startsWith("author:")) {
+                    var author = line.slice(line.indexOf(":")+1).trim();
+                    if (author.length > 0) {
+                        extension.author = author;
+                        requirements.author = true;
+                    }
+                } else if (line.startsWith("author_link_twitter:")) {
+                    var authorLinkTwitter = line.slice(line.indexOf(":")+1).trim();
+                    if (authorLinkTwitter.length > 0) {
+                        extension.authorLinkTwitter = authorLinkTwitter;
+                    }
+                } else if (line.startsWith("author_link_twitch:")) {
+                    var authorLinkTwitch = line.slice(line.indexOf(":")+1).trim();
+                    if (authorLinkTwitch.length > 0) {
+                        extension.authorLinkTwitch = authorLinkTwitch;
+                    }
+                } else if (line.startsWith("author_link_website:")) {
+                    var authorLinkWebsite = line.slice(line.indexOf(":")+1).trim();
+                    if (authorLinkWebsite.length > 0) {
+                        extension.authorLinkWebsite = authorLinkWebsite;
+                    }
+                } else if (line.startsWith("author_link_github:")) {
+                    var authorLinkGithub = line.slice(line.indexOf(":")+1).trim();
+                    if (authorLinkGithub.length > 0) {
+                        extension.authorLinkGithub = authorLinkGithub;
+                    }
+                } else if (line.startsWith("short_desc:")) {
+                    var shortDesc = line.slice(line.indexOf(":")+1).trim();
+                    if (shortDesc.length > 0) {
+                        extension.shortDesc = shortDesc;
+                        requirements.shortDesc = true;
+                    }
+                } else if (line.startsWith("tags:")) {
+                    var tags = line.slice(line.indexOf(":")+1).split(";");
+                    for (var tagIdx = 0; tagIdx < tags.length; ++tagIdx) {
+                        tags[tagIdx] = tags[tagIdx].toLowerCase().trim();
+                        if (tags[tagIdx].length > 0) {
+                            extension.tags.push(tags[tagIdx]);
+                        }
+                    }
+                } else if (line.startsWith("long_desc:")) {
+                    var longDesc = "";
+                    lineIdx++;
+                    line = lines[lineIdx];
+                    while (!line.startsWith("ENDOFDESC")) {
+                        longDesc += line;
+                        longDesc += "\n";
+                        lineIdx++;
+                        line = lines[lineIdx];
+                    }
+                    extension.longDesc = longDesc;
+                } else if (line.startsWith("assets:")) {
+                    lineIdx++;
+                    line = lines[lineIdx].trim();
+                    while (!line.startsWith("ENDOFASSETS")) {
+                        var assetType = "";
+                        switch (line[0]) {
+                            case "i":
+                                assetType = "image";
+                                break;
+                            case "v":
+                                assetType = "video";
+                                break;
+                            default:
+                                console.warn("Unknown asset type for extension #" + extensionStartsAt, line);
+                                break;
+                        }
+                        if (assetType.length > 0) {
+                            var asset = {
+                                type: assetType,
+                                url: line.slice(2).trim()
+                            };
+                            if (asset.url.length > 0) {
+                                extension.assets.push(asset);
+                            } else {
+                                console.warn("No url for asset in extension #" + extensionStartsAt, line);
+                            }
+                        }
+                        lineIdx++;
+                        line = lines[lineIdx].trim();
+                    }
+                    if (extension.assets.length > 0) {
+                        requirements.assets = true;
+                    }
+                } else {
+                    console.warn("Unknown key found while parsing extension #" + extensionStartsAt, line);
+                }
+                lineIdx++;
+                line = lines[lineIdx].trim();
+            }
+
+            var valid = true;
+            for (var req in requirements) {
+                if (requirements[req] == false) {
+                    valid = false;
+                    break;
+                }
+            }
+            if (valid) {
+                data.extensions.push(extension);
+                for (var tagIdx = 0; tagIdx < extension.tags.length; ++tagIdx) {
+                    var tag = extension.tags[tagIdx];
+                    if (data.tags[tag] === null || data.tags[tag] === undefined) {
+                        data.tags[tag] = 0;
+                    }
+                    data.tags[tag]++;
+                }
+            } else {
+                console.error("Invalid extension at line: " + extensionStartsAt, requirements);
+            }
+        } else if (line.startsWith("review:")) {
+            var reviewStartsAt = lineIdx;
+            while (!line.startsWith("ENDOFREVIEW")) {
+                var review = {
+                    extensionId: "",
+                    type: "",
+                    link: "",
+                    author: "",
+                    avatar: "",
+                    date: "",
+                    text: ""
+                };
+                if (line.startsWith("review:")) {
+                    var id = line.slice(line.indexOf(":")+1).trim();
+                    if (id.length > 0) {
+                        review.extensionId = id;
+                    }
+                } else if (line.startsWith("type:")) {
+                    var type = line.slice(line.indexOf(":")+1).trim();
+                    if (type.length > 0) {
+                        review.type = type;
+                    }
+                } else if (line.startsWith("link:")) {
+                    var link = line.slice(line.indexOf(":")+1).trim();
+                    if (link.length > 0) {
+                        review.link = link;
+                    }
+                } else if (line.startsWith("author:")) {
+                    var author = line.slice(line.indexOf(":")+1).trim();
+                    if (author.length > 0) {
+                        review.author = author;
+                    }
+                } else if (line.startsWith("avatar:")) {
+                    var avatar = line.slice(line.indexOf(":")+1).trim();
+                    if (avatar.length > 0) {
+                        review.avatar = avatar;
+                    }
+                } else if (line.startsWith("date:")) {
+                    var date = line.slice(line.indexOf(":")+1).trim();
+                    if (date.length > 0) {
+                        review.date = date;
+                    }
+                } else if (line.startsWith("text:")) {
+                    var text = line.slice(line.indexOf(":")+1).trim();
+                    if (text.length > 0) {
+                        review.text = text;
+                    }
+                } else {
+                    console.warn("Unknown key found while parsing review #" + reviewStartsAt, line);
+                }
+                lineIdx++;
+                line = lines[lineIdx].trim();
+            }
+        } else if (line.length > 0) {
+            console.warn("Unknown segment found in data file at line #" + lineIdx);
+        }
+    }
+
+    for (var reviewIdx = 0; reviewIdx < reviews.length; ++reviewsIdx) {
+        var review = reviews[reviewIdx];
+        var found = false;
+        for (var extensionIdx = 0; extensionIdx < data.extensions.length; ++extensionIdx) {
+            var extension = data.extensions[extensionIdx];
+            if (extension.id == review.extensionId) {
+                extension.reviews.push(review);
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            console.error("Could not find extension for review", review.extensionId);
+        }
+    }
+}
+
+function init() {
+    loadingEl.remove();
+    for (var tag in data.tags) {
+        filterByTags[tag] = false;
+    }
+    renderGallery();
+    onHashChange();
+
+    window.onhashchange = onHashChange;
+}
+
+function onHashChange() {
+    var hash = location.hash;
+    if (hash.length > 0 && hash[0] == "#") {
+        hash = hash.slice(1);
+    }
+    if (hash.startsWith("ext:")) {
+        var extensionId = hash.slice(hash.indexOf(":")+1).trim();
+        var found = false;
+        var extension = null;
+        for (var i = 0; i < data.extensions.length; ++i) {
+            if (data.extensions[i].id == extensionId) {
+                found = true;
+                extension = data.extensions[i];
+                break;
+            }
+        }
+        if (found) {
+            showExtension(extension);
+        } else {
+            history.replaceState(null, "", "#");
+            showGallery();
+        }
+    } else if (hash.startsWith("tags:")) {
+        for (var tag in filterByTags) {
+            filterByTags[tag] = false;
+        }
+        var rawTags = hash.slice(hash.indexOf(":")+1).split(":");
+        var tags = [];
+        for (var i = 0; i < rawTags.length; ++i) {
+            var tag = rawTags[i].trim().toLowerCase();
+            var tagExists = !(data.tags[tag] === null || data.tags[tag] === undefined);
+            if (tag.length > 0 && tagExists) {
+                tags.push(tag);
+                filterByTags[tag] = true;
+            }
+        }
+        history.replaceState(null, "", "#tags:" + tags.join(":"));
+        showGallery();
+    } else {
+        showGallery();
+    }
+}
+
+function renderGallery() {
+    var tagsList = emptyElement(document.querySelector(".extension_gallery .tag_list"));
+    var tagPrototype = document.getElementById("gallery_tag").content.firstElementChild;
+    for (var tag in data.tags) {
+        var tagEl = tagPrototype.cloneNode(true);
+        tagEl.querySelector(".name").textContent = tag;
+        tagEl.querySelector(".num").textContent = data.tags[tag];
+        tagEl.setAttribute("data-tag", tag);
+        tagsList.appendChild(tagEl);
+    }
+    tagsList.addEventListener("click", function(ev) {
+        var target = ev.target;
+        while (target != tagsList && !target.classList.contains("tag")) {
+            target = target.parentElement;
+        }
+        if (target != tagsList) {
+            var tag = target.getAttribute("data-tag");
+            filterByTags[tag] = !filterByTags[tag];
+            var tags = [];
+            for (var tag in filterByTags) {
+                if (filterByTags[tag]) {
+                    tags.push(tag);
+                }
+            }
+            if (tags.length > 0) {
+                history.pushState(null, "", "#tags:" + tags.join(":"));
+            } else {
+                history.pushState(null, "", "#");
+            }
+            showGallery();
+        }
+    });
+
+    var extensionList = emptyElement(document.querySelector(".extension_gallery .extension_list"));
+    var extensionPrototype = document.getElementById("extension_list_item").content.firstElementChild;
+    for (var i = 0; i < data.extensions.length; ++i) {
+        var extension = data.extensions[i];
+        var extensionEl = extensionPrototype.cloneNode(true);
+        extensionEl.setAttribute("href", "#ext:" + extension.id);
+        extensionEl.setAttribute("data-extension-id", extension.id);
+        var heroAsset = extension.assets[0];
+        if (heroAsset.type == "video") {
+            var videoTag = document.createElement("VIDEO");
+            videoTag.setAttribute("src", heroAsset.url);
+            extensionEl.querySelector(".left").appendChild(videoTag);
+        } else if (heroAsset.type == "image") {
+            var imageTag = document.createElement("IMG");
+            imageTag.setAttribute("src", heroAsset.url);
+            extensionEl.querySelector(".left").appendChild(imageTag);
+        }
+        extensionEl.querySelector(".name").textContent = extension.name;
+        extensionEl.querySelector(".author").textContent = extension.author;
+        extensionEl.querySelector(".short_desc").textContent = extension.shortDesc;
+        extensionList.appendChild(extensionEl);
+    }
+}
+
+function showGallery() {
+    var extensionsToShow = [];
+    var filter = false;
+    for (var tag in filterByTags) {
+        if (filterByTags[tag]) {
+            filter = true;
+        }
+    }
+    var tags = [];
+    if (filter) {
+        for (var tag in filterByTags) {
+            if (filterByTags[tag]) {
+                tags.push(tag);
+                for (var extIdx = 0; extIdx < data.extensions.length; ++extIdx) {
+                    var extension = data.extensions[extIdx];
+                    if (extension.tags.indexOf(tag) >= 0) {
+                        extensionsToShow.push(extension.id);
+                    }
+                }
+            }
+        }
+    } else {
+        extensionsToShow = data.extensions.map(function(ext) { return ext.id; });
+    }
+    var tagEls = document.querySelectorAll(".extension_gallery .tag_list .tag");
+    for (var i = 0; i < tagEls.length; ++i) {
+        if (tags.indexOf(tagEls[i].getAttribute("data-tag")) >= 0) {
+            tagEls[i].classList.add("selected");
+        } else {
+            tagEls[i].classList.remove("selected");
+        }
+    }
+    var extensionEls = document.querySelectorAll(".extension_gallery .extension_list .extension_list_item");
+    for (var i = 0; i < extensionEls.length; ++i) {
+        if (extensionsToShow.indexOf(extensionEls[i].getAttribute("data-extension-id")) >= 0) {
+            extensionEls[i].classList.remove("hide");
+        } else {
+            extensionEls[i].classList.add("hide");
+        }
+    }
+
+    extensionGalleryEl.style.display = "block";
+    extensionEl.style.display = "none";
+}
+
+function showExtension(extension) {
+    var assetList = emptyElement(extensionEl.querySelector(".asset_list"));
+    var assetPrototype = document.getElementById("asset").content.firstElementChild;
+    for (var i = 0; i < extension.assets.length; ++i) {
+        var asset = extension.assets[i];
+        var assetEl = assetPrototype.cloneNode(true);
+        if (asset.type == "video") {
+            var videoTag = document.createElement("VIDEO");
+            videoTag.setAttribute("src", asset.url);
+            assetEl.appendChild(videoTag);
+        } else if (asset.type == "image") {
+            var imageTag = document.createElement("IMG");
+            imageTag.setAttribute("src", asset.url);
+            assetEl.appendChild(imageTag);
+        }
+        assetEl.setAttribute("data-asset-idx", i);
+        assetList.appendChild(assetEl);
+    }
+    assetList.addEventListener("click", function(ev) {
+        var target = ev.target;
+        while (target != assetList && !target.classList.contains("asset")) {
+            target = target.parentElement;
+        }
+        if (target != assetList) {
+            var assetIdx = parseInt(target.getAttribute("data-asset-idx"), 10);
+            showAsset(extension, assetIdx);
+        }
+    });
+    showAsset(extension, 0);
+    extensionEl.querySelector(".details > .name").textContent = extension.name;
+    extensionEl.querySelector(".author > .name").textContent = extension.author;
+    var twitterEl = extensionEl.querySelector(".author .twitter");
+    if (extension.authorLinkTwitter.length > 0) {
+        twitterEl.setAttribute("href", "https://twitter.com/" + extension.authorLinkTwitter);
+        twitterEl.style.display = "inline-block";
+    } else {
+        twitterEl.style.display = "none";
+    }
+    var githubEl = extensionEl.querySelector(".author .github");
+    if (extension.authorLinkGithub.length > 0) {
+        githubEl.setAttribute("href", "https://github.com/" + extension.authorLinkGithub);
+        githubEl.style.display = "inline-block";
+    } else {
+        githubEl.style.display = "none";
+    }
+    var twitchEl = extensionEl.querySelector(".author .twitch");
+    if (extension.authorLinkTwitch.length > 0) {
+        twitchEl.setAttribute("href", "https://twitch.tv/" + extension.authorLinkTwitch);
+        twitchEl.style.display = "inline-block";
+    } else {
+        twitchEl.style.display = "none";
+    }
+    var websiteEl = extensionEl.querySelector(".author .website");
+    if (extension.authorLinkWebsite.length > 0) {
+        websiteEl.setAttribute("href", extension.authorLinkWebsite);
+        websiteEl.style.display = "inline-block";
+    } else {
+        websiteEl.style.display = "none";
+    }
+    var tagsEl = emptyElement(extensionEl.querySelector(".tags"));
+    var tagPrototype = document.getElementById("extension_tag").content.firstElementChild;
+    for (var i = 0; i < extension.tags.length; ++i) {
+        var tagEl = tagPrototype.cloneNode(true);
+        tagEl.setAttribute("href", "#tags:" + extension.tags[i]);
+        tagEl.textContent = extension.tags[i];
+        tagsEl.appendChild(tagEl);
+    }
+    extensionEl.querySelector(".description").textContent = (extension.longDesc.length > 0 ? extension.longDesc : extension.shortDesc);
+    extensionEl.querySelector(".get_extension").setAttribute("href", extension.link);
+    extensionGalleryEl.style.display = "none";
+    extensionEl.style.display = "block";
+}
+
+function showAsset(extension, assetIdx) {
+    var asset = extension.assets[assetIdx];
+    var bigEl = emptyElement(extensionEl.querySelector(".big"));
+    if (asset.type == "video") {
+        var videoTag = document.createElement("VIDEO");
+        videoTag.setAttribute("src", asset.url);
+        videoTag.setAttribute("autoplay", "true");
+        videoTag.setAttribute("controls", "true");
+        videoTag.setAttribute("loop", "true");
+        bigEl.appendChild(videoTag);
+    } else if (asset.type == "image") {
+        var imageTag = document.createElement("IMG");
+        imageTag.setAttribute("src", asset.url);
+        bigEl.appendChild(imageTag);
+    }
+}
+
+function emptyElement(el) {
+    var newEl = el.cloneNode(false);
+    el.parentElement.insertBefore(newEl, el);
+    el.parentElement.removeChild(el);
+    return newEl;
+}
+
+parseDataFile(textData);
+init();
+
+</script>
+</body>
+</html>
