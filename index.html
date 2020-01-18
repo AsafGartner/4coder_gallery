@@ -200,9 +200,6 @@ a {
     text-align: center;
 }
 
-.hide {
-    display: none;
-}
 </style>
 </head>
 <body>
@@ -671,9 +668,9 @@ function showGallery() {
     var extensionEls = document.querySelectorAll(".extension_gallery .extension_list .extension_list_item");
     for (var i = 0; i < extensionEls.length; ++i) {
         if (extensionsToShow.indexOf(extensionEls[i].getAttribute("data-extension-id")) >= 0) {
-            extensionEls[i].classList.remove("hide");
+            extensionEls[i].style.display = "block";
         } else {
-            extensionEls[i].classList.add("hide");
+            extensionEls[i].style.display = "none";
         }
     }
 
