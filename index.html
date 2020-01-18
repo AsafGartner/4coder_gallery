@@ -583,6 +583,9 @@ function onHashChange() {
     if (hash.length > 0 && hash[0] == "#") {
         hash = hash.slice(1);
     }
+    for (var tag in filterByTags) {
+        filterByTags[tag] = false;
+    }
     if (hash.startsWith("ext:")) {
         var extensionId = hash.slice(hash.indexOf(":")+1).trim();
         var found = false;
@@ -601,9 +604,6 @@ function onHashChange() {
             showGallery();
         }
     } else if (hash.startsWith("tags:")) {
-        for (var tag in filterByTags) {
-            filterByTags[tag] = false;
-        }
         var rawTags = hash.slice(hash.indexOf(":")+1).split(":");
         var tags = [];
         for (var i = 0; i < rawTags.length; ++i) {

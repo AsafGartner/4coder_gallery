@@ -23,7 +23,8 @@ i assets/ryan/graphs/img3.gif
 v assets/ryan/graphs/vid1.mp4
 ENDOFASSETS
 ENDOFEXTENSION
-extension: ranyspowermode
+
+extension: ryanspowermode
 extension_name: Power Mode
 extension_link: https://github.com/ryanfleury/4ocder_fleury
 author: Ryan Fleury
