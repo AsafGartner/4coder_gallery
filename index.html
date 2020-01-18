@@ -27,7 +27,7 @@ a {
 }
 
 .content {
-    width: 50%;
+    width: 1200px;
     margin: 0 auto;
 }
 
@@ -39,6 +39,7 @@ a {
     text-align: center;
 }
 .extension_gallery .tag_list .tag {
+    white-space: nowrap;
     display: inline-block;
     margin: 0 5px;
     padding: 5px;
@@ -48,6 +49,7 @@ a {
 }
 
 .extension_gallery .tag_list .tag .name {
+    white-space: nowrap;
     vertical-align: middle;
     text-transform: capitalize;
 }
@@ -160,6 +162,7 @@ a {
 }
 
 .extension .details .tag {
+    white-space: nowrap;
     display: inline-block;
     margin: 0 5px;
     padding: 5px;
@@ -198,6 +201,44 @@ a {
     background-color: #744F14;
     padding: 10px;
     text-align: center;
+}
+
+.extension .reviews {
+    margin-top: 20px;
+}
+
+.extension .text_review {
+    width: 500px;
+    border-radius: 10px;
+    border: 1px solid white;
+    overflow: hidden;
+    padding: 10px;
+    display: inline-block;
+    margin: 10px;
+}
+
+.text_review .left, .text_review .right {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.text_review .left img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    object-fit: fill;
+    object-position: center;
+    overflow: hidden;
+}
+
+.text_review .author {
+    font-size: 24px;
+    color: #00A000;
+}
+
+.extension .text_review .text {
+    margin-top: 10px;
+    white-space: pre wrap;
 }
 
 </style>
@@ -449,16 +490,16 @@ function parseDataFile(textData) {
             }
         } else if (line.startsWith("review:")) {
             var reviewStartsAt = lineIdx;
+            var review = {
+                extensionId: "",
+                type: "",
+                link: "",
+                author: "",
+                avatar: "",
+                date: "",
+                text: ""
+            };
             while (!line.startsWith("ENDOFREVIEW")) {
-                var review = {
-                    extensionId: "",
-                    type: "",
-                    link: "",
-                    author: "",
-                    avatar: "",
-                    date: "",
-                    text: ""
-                };
                 if (line.startsWith("review:")) {
                     var id = line.slice(line.indexOf(":")+1).trim();
                     if (id.length > 0) {
@@ -500,12 +541,16 @@ function parseDataFile(textData) {
                 lineIdx++;
                 line = lines[lineIdx].trim();
             }
+            if (review.extensionId.length > 0) {
+                // TODO: verify the rest of the review data based on type
+                reviews.push(review);
+            }
         } else if (line.length > 0) {
             console.warn("Unknown segment found in data file at line #" + lineIdx);
         }
     }
 
-    for (var reviewIdx = 0; reviewIdx < reviews.length; ++reviewsIdx) {
+    for (var reviewIdx = 0; reviewIdx < reviews.length; ++reviewIdx) {
         var review = reviews[reviewIdx];
         var found = false;
         for (var extensionIdx = 0; extensionIdx < data.extensions.length; ++extensionIdx) {
@@ -747,6 +792,20 @@ function showExtension(extension) {
     }
     extensionEl.querySelector(".description").textContent = (extension.longDesc.length > 0 ? extension.longDesc : extension.shortDesc);
     extensionEl.querySelector(".get_extension").setAttribute("href", extension.link);
+    var reviewsContainer = emptyElement(extensionEl.querySelector(".reviews"));
+    var textReviewPrototype = document.getElementById("text_review").content.firstElementChild;
+    for (var i = 0; i < extension.reviews.length; ++i) {
+        var review = extension.reviews[i];
+        if (review.type == "twitter") {
+        } else if (review.type == "text") {
+            var reviewEl = textReviewPrototype.cloneNode(true);
+            reviewEl.querySelector(".left img").src = review.avatar;
+            reviewEl.querySelector(".author").textContent = review.author;
+            reviewEl.querySelector(".date").textContent = review.date;
+            reviewEl.querySelector(".text").textContent = review.text;
+            reviewsContainer.appendChild(reviewEl);
+        }
+    }
     extensionGalleryEl.style.display = "none";
     extensionEl.style.display = "block";
 }

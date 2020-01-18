@@ -45,7 +45,28 @@ ENDOFREVIEW
 review: ryansgraphs
 type: text
 author: Asaf
-avatar: N/A
+avatar: https://avatars3.githubusercontent.com/u/463270?s=460&v=4
+date: 2020-01-18
+text: Installation was super easy. Barely an inconvenience.
+ENDOFREVIEW
+review: ryansgraphs
+type: text
+author: Asaf
+avatar: https://avatars3.githubusercontent.com/u/463270?s=460&v=4
+date: 2020-01-18
+text: Installation was super easy. Barely an inconvenience.
+ENDOFREVIEW
+review: ryansgraphs
+type: text
+author: Asaf
+avatar: https://avatars3.githubusercontent.com/u/463270?s=460&v=4
+date: 2020-01-18
+text: Installation was super easy. Barely an inconvenience.
+ENDOFREVIEW
+review: ryansgraphs
+type: text
+author: Asaf
+avatar: https://avatars3.githubusercontent.com/u/463270?s=460&v=4
 date: 2020-01-18
 text: Installation was super easy. Barely an inconvenience.
 ENDOFREVIEW
