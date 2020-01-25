@@ -26,7 +26,7 @@ ENDOFEXTENSION
 
 extension: ryanspowermode
 extension_name: Power Mode
-extension_link: https://github.com/ryanfleury/4ocder_fleury
+extension_link: https://github.com/ryanfleury/4coder_fleury
 author: Ryan Fleury
 author_link_twitter: ryanjfleury
 author_link_twitch: ryanfleury
